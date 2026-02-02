@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title> Angela Antonella Palavecino, ¿Serías mi San Valentín? 💘</title>
+  <title> Angela Antonella Palavecino 💘</title>
   <style>
     :root{
       --bg1:#fff0f6;
@@ -73,7 +73,7 @@
       margin: 10px auto;
       max-width: 52ch;
       font-size: 16px;
-      opacity:.92; 
+      opacity:.92;
     }
 
     .btns{
@@ -174,48 +174,37 @@
   <canvas id="confetti"></canvas>
 
   <div class="card">
-    <h1>¿Serías mi San Valentín, <span id="toName">amor</span>? 💘</h1>
-    <p id="line1">Prometo risas, mimos y un plan bonito. (Y sí, también postre 😄)</p>
+    <h1>Angi, Serías mi San Valentín, <span id="toName"> Hermosa Salerosa </span>? 💘</h1>
+    <p id="line1">Te Prometo muchisimas risas, mimos y un futuro entero </p>
 
     <div class="btns" id="btnArea">
       <button id="yesBtn">Sí 💖</button>
       <button id="noBtn" aria-label="No">No 🙈</button>
     </div>
 
-    <div class="hint">Tip: personaliza el link con <code>?to=Nombre&from=TuNombre</code></div>
-    <div class="footer">Hecho con cariño 🫶</div>
+    <div class="hint"></div>
+    <div class="footer">Hecho con muchito amor 🫶</div>
   </div>
 
   <div class="modal hidden" id="modal">
     <div class="modalCard">
-      <div class="big">¡SABÍA QUE DIRÍAS QUE SÍ! 🎉💞</div>
-      <p class="small" id="finalText">Te amo. Feliz San Valentín. 💘</p>
+      <div class="big">¡SABÍA QUE IBAS A DECIR QUE SÍ! 🎉💞</div>
+      <p class="small" id="finalText">TE AMO ANGELA ANTONELLA PALAVECINO!!! 💘</p>
       <div class="row">
-        <a class="fakeBtn" id="whatsBtn" href="#" target="_blank" rel="noopener">Enviar por WhatsApp 💬</a>
         <button class="ghost" id="closeBtn">Cerrar</button>
       </div>
       <p class="small" style="margin-top:12px; opacity:.75;">
-        (Si WhatsApp no abre, copia el texto y envíalo como mensaje normal.)
       </p>
     </div>
   </div>
 
   <script>
-    // --- Personalización por URL: ?to=Ana&from=Carlos
+    // --- Personalización por URL: ?
     const params = new URLSearchParams(location.search);
     const to = (params.get("to") || "amor").slice(0, 30);
     const from = (params.get("from") || "yo").slice(0, 30);
 
     document.getElementById("toName").textContent = to;
-
-    // Texto final + WhatsApp
-    const finalText = `💘 ${to}, ¿serías mi San Valentín? 💘\n\nTe lo pregunté con una mini web 😄\n\nCon amor, ${from} 💞`;
-    document.getElementById("finalText").textContent =
-      `Te amo, ${to}. ¿Plan romántico esta semana? 💞 — Con amor, ${from}`;
-
-    const whatsBtn = document.getElementById("whatsBtn");
-    const waUrl = "https://wa.me/?text=" + encodeURIComponent(finalText);
-    whatsBtn.href = waUrl;
 
     // --- Corazones flotando (fondo)
     const heartEmojis = ["💗","💖","💘","💞","💕","❤️"];
