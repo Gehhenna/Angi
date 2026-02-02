@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¿Serías mi San Valentín? 💘</title>
+  <style>
+    :root{
+      --bg1:#fff0f6;
+      --bg2:#ffe3ec;
+      --card:#ffffffcc;
+      --text:#2b2b2b;
+      --shadow: 0 18px 60px rgba(0,0,0,.12);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100svh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      background:
+        radial-gradient(1200px 800px at 20% 20%, var(--bg2), transparent 55%),
+        radial-gradient(1000px 700px at 80% 10%, #ffd6e7, transparent 60%),
+        radial-gradient(900px 700px at 50% 90%, #ffe8f1, transparent 55%),
+        linear-gradient(180deg, var(--bg1), #fff);
+    }
+    /* corazones flotando */
+    .heart{
+      position:absolute;
+      font-size:18px;
+      opacity:.18;
+      animation: floatUp linear infinite;
+      filter: blur(.2px);
+      user-select:none;
+      pointer-events:none;
+    }
+    @keyframes floatUp{
+      from { transform: translateY(110svh) translateX(0) rotate(0deg); }
+      to   { transform: translateY(-20svh) translateX(60px) rotate(360deg); }
+    }
+
+    canvas#confetti{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .card{
+      position:relative;
+      z-index:2;
+      width:min(680px, 92vw);
+      padding:28px 22px;
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.6);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    h1{
+      margin: 6px 0 10px;
+      font-size: clamp(26px, 4.4vw, 40px);
+      line-height:1.15;
+    }
+    p{
+      margin: 10px auto;
+      max-width: 52ch;
+      font-size: 16px;
+      opacity:.92;
+    }
+
+    .btns{
+      position:relative;
+      height: 120px;
+      margin-top: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:10px;
+      border-radius: 18px;
+    }
+
+    button{
+      border:0;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      transition: transform .08s ease;
+      font-size: 16px;
+    }
+    button:active{ transform: scale(.98); }
+    #yesBtn{ background: #ff2d78; color:white; }
+    #noBtn { background: #111; color:white; position:absolute; }
+
+    .hint{
+      margin-top: 12px;
+      font-size: 13px;
+      opacity:.75;
+    }
+    .footer{
+      margin-top: 14px;
+      font-size: 13px;
+      opacity:.75;
+    }
+    .footer code{
+      background: rgba(0,0,0,.06);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    /* pantalla final */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:5;
+      background: rgba(0,0,0,.45);
+      padding:18px;
+    }
+    .modal.hidden{ display:none; }
+    .modalCard{
+      width:min(720px, 94vw);
+      background:white;
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 22px 18px;
+      text-align:center;
+    }
+    .big{
+      font-size: clamp(26px, 5vw, 44px);
+      margin: 6px 0 8px;
+    }
+    .small{
+      opacity:.85;
+      margin: 6px auto 14px;
+      max-width: 55ch;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .ghost{
+      background: #f3f3f3;
+      color:#111;
+    }
+    a.fakeBtn{
+      display:inline-block;
+      text-decoration:none;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight:800;
+      background:#ff2d78;
+      color:white;
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <div class="card">
+    <h1>¿Serías mi San Valentín, <span id="toName">amor</span>? 💘</h1>
+    <p id="line1">Prometo risas, mimos y un plan bonito. (Y sí, también postre 😄)</p>
+
+    <div class="btns" id="btnArea">
+      <button id="yesBtn">Sí 💖</button>
+      <button id="noBtn" aria-label="No">No 🙈</button>
+    </div>
+
+    <div class="hint">Tip: personaliza el link con <code>?to=Nombre&from=TuNombre</code></div>
+    <div class="footer">Hecho con cariño 🫶</div>
+  </div>
+
+  <div class="modal hidden" id="modal">
+    <div class="modalCard">
+      <div class="big">¡SABÍA QUE DIRÍAS QUE SÍ! 🎉💞</div>
+      <p class="small" id="finalText">Te amo. Feliz San Valentín. 💘</p>
+      <div class="row">
+        <a class="fakeBtn" id="whatsBtn" href="#" target="_blank" rel="noopener">Enviar por WhatsApp 💬</a>
+        <button class="ghost" id="closeBtn">Cerrar</button>
+      </div>
+      <p class="small" style="margin-top:12px; opacity:.75;">
+        (Si WhatsApp no abre, copia el texto y envíalo como mensaje normal.)
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // --- Personalización por URL: ?to=Ana&from=Carlos
+    const params = new URLSearchParams(location.search);
+    const to = (params.get("to") || "amor").slice(0, 30);
+    const from = (params.get("from") || "yo").slice(0, 30);
+
+    document.getElementById("toName").textContent = to;
+
+    // Texto final + WhatsApp
+    const finalText = `💘 ${to}, ¿serías mi San Valentín? 💘\n\nTe lo pregunté con una mini web 😄\n\nCon amor, ${from} 💞`;
+    document.getElementById("finalText").textContent =
+      `Te amo, ${to}. ¿Plan romántico esta semana? 💞 — Con amor, ${from}`;
+
+    const whatsBtn = document.getElementById("whatsBtn");
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(finalText);
+    whatsBtn.href = waUrl;
+
+    // --- Corazones flotando (fondo)
+    const heartEmojis = ["💗","💖","💘","💞","💕","❤️"];
+    for(let i=0;i<22;i++){
+      const s = document.createElement("div");
+      s.className = "heart";
+      s.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+      s.style.left = Math.random()*100 + "vw";
+      s.style.animationDuration = (8 + Math.random()*10) + "s";
+      s.style.fontSize = (14 + Math.random()*18) + "px";
+      s.style.animationDelay = (-Math.random()*12) + "s";
+      document.body.appendChild(s);
+    }
+
+    // --- Botón NO que se escapa
+    const noBtn = document.getElementById("noBtn");
+    const area = document.getElementById("btnArea");
+
+    function placeNoButtonRandom(){
+      const rect = area.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const pad = 10;
+
+      const maxX = rect.width - btnRect.width - pad;
+      const maxY = rect.height - btnRect.height - pad;
+
+      const x = Math.max(pad, Math.random() * Math.max(pad, maxX));
+      const y = Math.max(pad, Math.random() * Math.max(pad, maxY));
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    // posición inicial
+    requestAnimationFrame(placeNoButtonRandom);
+
+    // en desktop: al acercar el mouse
+    noBtn.addEventListener("mouseenter", placeNoButtonRandom);
+
+    // en móvil: al tocar
+    noBtn.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      placeNoButtonRandom();
+    });
+
+    // --- Botón SÍ: muestra modal + confetti
+    const yesBtn = document.getElementById("yesBtn");
+    const modal = document.getElementById("modal");
+    const closeBtn = document.getElementById("closeBtn");
+
+    yesBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+      startConfetti();
+    });
+    closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) modal.classList.add("hidden");
+    });
+
+    // --- Confetti (canvas simple)
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let confetti = [];
+    let confettiRunning = false;
+
+    function resizeCanvas(){
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function makeConfettiPiece(){
+      const colors = ["#ff2d78","#ff8fab","#ffd6e7","#8bd3ff","#a0ffa0","#fff1a8"];
+      return {
+        x: Math.random() * window.innerWidth,
+        y: -20,
+        w: 6 + Math.random() * 8,
+        h: 8 + Math.random() * 12,
+        vx: -2 + Math.random() * 4,
+        vy:  2 + Math.random() * 5,
+        rot: Math.random() * Math.PI,
+        vr:  (-0.2 + Math.random() * 0.4),
+        color: colors[Math.floor(Math.random()*colors.length)],
+        life: 220 + Math.random()*120
+      };
+    }
+
+    function startConfetti(){
+      confettiRunning = true;
+      confetti = [];
+      for(let i=0;i<160;i++) confetti.push(makeConfettiPiece());
+      requestAnimationFrame(tick);
+      // se corta solo después de un rato
+      setTimeout(()=>{ confettiRunning = false; }, 3500);
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+      confetti = confetti.filter(p => p.life > 0);
+
+      for(const p of confetti){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.vy += 0.03; // gravedad suave
+        p.life -= 1;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+
+      if(confettiRunning){
+        // repone un poco para que siga
+        if(confetti.length < 140){
+          for(let i=0;i<10;i++) confetti.push(makeConfettiPiece());
+        }
+        requestAnimationFrame(tick);
+      } else if(confetti.length > 0){
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+      }
+    }
+  </script>
+</body>
+</html>
